@@ -36,7 +36,75 @@ function dibujarPuntos(ctx, puntos, puntoA, mejor_vecino) {
     ctx.fill(); // Terminar trazo
 }
 
-function diujaLinea(ctx, puntos, paso) {
+function buscaLimitesY(punto) {
+    var board = localStorage.getItem('board');
+    board = JSON.parse(board);
+
+    // console.log("---------------");
+    // console.log(board);
+
+    var min = 0;
+    var max = 99;
+
+    for(i=punto.yValue; i>=0; i--) {
+        if(board[punto.xValue][i] == 1){
+            min = i-1;
+            break;
+        }
+    }
+
+    for(i=punto.yValue; i<100; i++) {
+        if(board[punto.xValue][i] == 1){
+            max = i-1;
+            break;
+        }
+    }
+
+    for(i=min; i<=max; i++) {
+        board[punto.xValue][i] = 1;
+    }
+
+    localStorage.setItem('board', JSON.stringify( board ));
+
+    return [min, max];
+
+}
+
+function buscaLimitesX(punto) {
+    var board = localStorage.getItem('board');
+    board = JSON.parse(board);
+
+    // console.log("---------------");
+    // console.log(board);
+
+    var min = 0;
+    var max = 99;
+
+    for(i=punto.xValue; i>=0; i--) {
+        if(board[i][punto.yValue] == 1){
+            min = i-1;
+            break;
+        }
+    }
+
+    for(i=punto.xValue; i<100; i++) {
+        if(board[i][punto.yValue] == 1){
+            max = i-1;
+            break;
+        }
+    }
+
+    for(i=min; i<=max; i++) {
+        board[i][punto.yValue] = 1;
+    }
+
+    localStorage.setItem('board', JSON.stringify( board ));
+
+    return [min, max];
+
+}
+
+function diujaLinea(ctx, puntos, paso, jsonData) {
 
     var trasladar = 0;
     var agrandar = 10;
@@ -46,16 +114,22 @@ function diujaLinea(ctx, puntos, paso) {
 
     if(puntos[paso].num_Letter == 0) {
         // Se dibuja una linea vertical
+        var arrayLim = buscaLimitesY(puntos[paso]);
+        console.log(arrayLim);
+
         ctx.beginPath();
-        ctx.moveTo( (puntos[paso].xValue + trasladar) * agrandar, (0 + trasladar) * agrandar );
-        ctx.lineTo( (puntos[paso].xValue + trasladar) * agrandar, (100 + trasladar) * agrandar );
+        ctx.moveTo( (puntos[paso].xValue + trasladar) * agrandar, (arrayLim[0]+1 + trasladar) * agrandar );
+        ctx.lineTo( (puntos[paso].xValue + trasladar) * agrandar, (arrayLim[1]+1 + trasladar) * agrandar );
         ctx.stroke();
 
     } else {
         // Se dibuja una linea horizontal'
+        var arrayLim = buscaLimitesX(puntos[paso]);
+        console.log(arrayLim);
+
         ctx.beginPath();
-        ctx.moveTo( (0 + trasladar) * agrandar, (puntos[paso].yValue + trasladar) * agrandar );
-        ctx.lineTo( (100 + trasladar) * agrandar, (puntos[paso].yValue + trasladar) * agrandar );
+        ctx.moveTo( (arrayLim[0]+1 + trasladar) * agrandar, (puntos[paso].yValue + trasladar) * agrandar );
+        ctx.lineTo( (arrayLim[1]+1 + trasladar) * agrandar, (puntos[paso].yValue + trasladar) * agrandar );
         ctx.stroke();
     }
 
@@ -76,7 +150,7 @@ function dibujarTodo(jsonData, paso) {
         // ctx.clearRect(0, 0, 1000, 1000);
 
         if(paso < puntos.length)
-            diujaLinea(ctx, puntos, paso);
+            diujaLinea(ctx, puntos, paso, jsonData);
 
     	if(paso < 1 || paso>=puntos.length)
             dibujarPuntos(ctx, puntos, puntoA, mejor_vecino);

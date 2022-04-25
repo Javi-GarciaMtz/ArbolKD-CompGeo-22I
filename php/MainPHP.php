@@ -33,19 +33,21 @@ if (
     // $arrayPuntos = array($point1, $point2, $point3, $point4, $point5, $point6, $point7, $point8, $point9, $point10);
 
     $puntosAGenerar = 50;
-    $minDec = 0;
-    $maxDec = 9;
+    // $minDec = 0;
+    // $maxDec = 9;
     $min = 0;
     $max = 50;
     $arrayPuntos = array();
     for($i=0; $i<$puntosAGenerar; $i++) {
-        $randomDec = random_int( $minDec, $maxDec ) * .01;
+        // $randomDec = random_int( $minDec, $maxDec ) * .01;
         $random = random_int( $min, $max );
-        $x = $random + $randomDec;
+        // $x = $random + $randomDec;
+        $x = $random;
 
-        $randomDec = random_int( $minDec, $maxDec ) * .01;
+        // $randomDec = random_int( $minDec, $maxDec ) * .01;
         $random = random_int( $min, $max );
-        $y = $random + $randomDec;
+        // $y = $random + $randomDec;
+        $y = $random;
 
         array_push($arrayPuntos, new Punto($x,  $y));
     }
@@ -71,7 +73,9 @@ if (
         'puntos' => get_Puntos_Json($arrayPuntos),
         'mejor_vecino' => $mejor_vecino->get_Json_Array(),
         'distancia' => $distancia,
-        'puntoA' => $puntoA->get_Json_Array()
+        'puntoA' => $puntoA->get_Json_Array(),
+        'limitesX' => array(0, 100),
+        'limitesY' => array(0, 100)
     );
 
     echo json_encode( $data );

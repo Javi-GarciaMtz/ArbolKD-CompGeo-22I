@@ -45,9 +45,23 @@ function dibujar() {
     dibujarTodo(jsonDatos, paso);
 }
 
+function reiniciaBoard() {
+    var board = [];
+    for(i=0; i<100; i++) {
+        var arrayTemp = [];
+        for(j=0; j<100; j++) {
+            arrayTemp.push(0);
+        }
+        board.push(arrayTemp);
+    }
+    // console.log(board);
+    localStorage.setItem('board', JSON.stringify( board ));
+}
+
 function limpiarCanvas() {
     var canvas = document.getElementById('canvasHTML');
     localStorage.setItem('paso', 0);
+    reiniciaBoard();
 
     if (canvas.getContext) {
         var ctx = canvas.getContext('2d');
